@@ -42,7 +42,7 @@ function seedUserModel() {
         img: "https://m.media-amazon.com/images/I/71LESEKiazL._AC_UY436_QL65_.jpg",
       },
       {
-        name: "true Heart",
+        name: "True Heart",
         description:
           "Everyone has experienced coming to a crossroads in their life. We’re all familiar with the feeling of having to decide between two different directions our lives could go--two different visions of our future. How do we pick between them? How do we know which one is the “right” path to take?",
         status: "RECOMMENDED TO ME",
@@ -52,16 +52,17 @@ function seedUserModel() {
   });
   khaled.save();
 }
-seedUserModel();
+// seedUserModel();
 
 server.get("/books", getBooksData);
 function getBooksData(request, response) {
-  let { userName } = request.query;
-  utilities.userModel.find({ name: userName }, (error, userData) => {
+  let { email } = request.query;
+  utilities.userModel.find({ email: email }, (error, userData) => {
     if (error) {
       response.send("something went wrong");
     } else {
-      response.send(userData);
+      console.log(userData[0].books);
+      response.send(userData[0].books);
     }
   });
 }
