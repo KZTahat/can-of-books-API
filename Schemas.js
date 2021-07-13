@@ -1,20 +1,19 @@
 "use strict";
 const mongoose = require("mongoose");
 
-let utilities = {};
 
-utilities.bookSchema = new mongoose.Schema({
+const bookSchema = new mongoose.Schema({
   name: String,
   description: String,
   status: String,
   img: String,
 });
-utilities.userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   email: String,
-  books: [utilities.bookSchema],
+  books: [bookSchema],
 });
 
-utilities.bookModel = mongoose.model("book", utilities.bookSchema);
-utilities.userModel = mongoose.model("user", utilities.userSchema);
+const bookModel = mongoose.model("book", bookSchema);
+const userModel = mongoose.model("user", userSchema);
 
-module.exports = utilities;
+module.exports = userModel;

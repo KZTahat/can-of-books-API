@@ -3,19 +3,26 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const { request, response } = require("express");
+const { request, response, json } = require("express");
 // const { userModel } = require("./Schemas");
-const utilities = require("./Schemas");
+const userModel = require("./Schemas");
 
 require("dotenv").config();
 const PORT = process.env.PORT;
 const server = express();
 server.use(cors());
+server.use(express.json());
 
 // Proof Of Life
 server.get("/", (request, response) => {
   response.send(`it's Working`);
 });
+
+server.get("/books", getBooksData);
+
+server.post("/addbook", addNewBook);
+
+server.delete("/deletebook/:id", deleteBook);
 
 // Connect to MongoDB
 mongoose.connect("mongodb://localhost:27017/books", {
@@ -24,7 +31,7 @@ mongoose.connect("mongodb://localhost:27017/books", {
 });
 
 function seedUserModel() {
-  const khaled = new utilities.userModel({
+  const khaled = new userModel({
     email: "kztahat96@gmail.com",
     books: [
       {
@@ -54,14 +61,13 @@ function seedUserModel() {
 }
 // seedUserModel();
 
-server.get("/books", getBooksData);
 function getBooksData(request, response) {
   let { email } = request.query;
-  utilities.userModel.find({ email: email }, (error, userData) => {
+  userModel.find({ email: email }, (error, userData) => {
     if (error) {
       response.send("something went wrong");
     } else {
-      console.log(userData[0].books);
+      // console.log(userData[0].books);
       response.send(userData[0].books);
     }
   });
@@ -70,3 +76,42 @@ function getBooksData(request, response) {
 server.listen(PORT, () => {
   console.log(`LISTINING ON PORT ${PORT}`);
 });
+// Adding new Book
+function addNewBook(req, res) {
+  const { bookName, description, imgUrl, state, email } = req.body;
+  userModel.find({ email: email }, (error, newData) => {
+    if (error) {
+      response.send("something went wrong POST");
+    } else {
+      newData[0].books.push({
+        name: bookName,
+        description: description,
+        img: imgUrl,
+        status: state,
+      });
+      // console.log(newData[0].books);
+      newData[0].save();
+      res.send(newData[0].books);
+    }
+  });
+}
+// delete Book
+function deleteBook(req, res) {
+  let { email } = req.query;
+  let index = Number(req.params.id);
+  userModel.find({ email: email }, (error, newData) => {
+    if (error) {
+      res.send("something went wrong DELETE");
+    } else {
+      const response = newData[0].books.filter((element, idx) => {
+        if (idx !== index) {
+          return element;
+        }
+      });
+      newData[0].books = response;
+      // console.log( newData[0].books);
+      newData[0].save();
+      res.send(newData[0].books);
+    }
+  });
+}
