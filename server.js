@@ -22,6 +22,8 @@ server.get("/books", getBooksData);
 
 server.post("/addbook", addNewBook);
 
+server.delete("/deletebook/:id", deleteBook);
+
 // Connect to MongoDB
 mongoose.connect("mongodb://localhost:27017/books", {
   useNewUrlParser: true,
@@ -74,7 +76,7 @@ function getBooksData(request, response) {
 server.listen(PORT, () => {
   console.log(`LISTINING ON PORT ${PORT}`);
 });
-
+// Adding new Book
 function addNewBook(req, res) {
   const { bookName, description, imgUrl, state, email } = req.body;
   userModel.find({ email: email }, (error, newData) => {
@@ -87,7 +89,27 @@ function addNewBook(req, res) {
         img: imgUrl,
         status: state,
       });
-      console.log(newData[0].books);
+      // console.log(newData[0].books);
+      newData[0].save();
+      res.send(newData[0].books);
+    }
+  });
+}
+// delete Book
+function deleteBook(req, res) {
+  let { email } = req.query;
+  let index = Number(req.params.id);
+  userModel.find({ email: email }, (error, newData) => {
+    if (error) {
+      res.send("something went wrong DELETE");
+    } else {
+      const response = newData[0].books.filter((element, idx) => {
+        if (idx !== index) {
+          return element;
+        }
+      });
+      newData[0].books = response;
+      // console.log( newData[0].books);
       newData[0].save();
       res.send(newData[0].books);
     }

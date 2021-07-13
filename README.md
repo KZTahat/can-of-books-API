@@ -36,6 +36,6 @@ Estimate of time needed to complete: `3 hours (pair)`
 
 Start time: `2:10 pm`
 
-Finish time: ``
+Finish time: `7:30 pm`
 
-Actual time needed to complete: `2 hours,30 minutes`
+Actual time needed to complete: `5 hours`
