@@ -72,10 +72,6 @@ function getBooksData(request, response) {
     }
   });
 }
-
-server.listen(PORT, () => {
-  console.log(`LISTINING ON PORT ${PORT}`);
-});
 // Adding new Book
 function addNewBook(req, res) {
   const { bookName, description, imgUrl, state, email } = req.body;
@@ -115,3 +111,8 @@ function deleteBook(req, res) {
     }
   });
 }
+
+// listening on PORT
+server.listen(PORT, () => {
+  console.log(`LISTINING ON PORT ${PORT}`);
+});
