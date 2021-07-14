@@ -39,3 +39,13 @@ Start time: `2:10 pm`
 Finish time: `7:30 pm`
 
 Actual time needed to complete: `5 hours`
+
+Name of feature: `Update`
+
+Estimate of time needed to complete: `1 hour`
+
+Start time: `1:30 pm`
+
+Finish time: `4:00`
+
+Actual time needed to complete: `2 hours, 30 minutes (pair)`
