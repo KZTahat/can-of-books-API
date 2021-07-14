@@ -24,11 +24,14 @@ server.post("/addbook", addNewBook);
 
 server.delete("/deletebook/:id", deleteBook);
 
+server.put("/updatebook/:id", updateBook);
+
 // Connect to MongoDB
-mongoose.connect(`${process.env.MONGO_URL}`, {
+mongoose.connect(`${process.env.MONGOURL}`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+// mongodb://KZTahat:khaled123456789@cluster0-shard-00-00.h5tzp.mongodb.net:27017,cluster0-shard-00-01.h5tzp.mongodb.net:27017,cluster0-shard-00-02.h5tzp.mongodb.net:27017/books?ssl=true&replicaSet=atlas-4ab67b-shard-0&authSource=admin&retryWrites=true&w=majority"
 
 function seedUserModel() {
   const khaled = new userModel({
@@ -67,7 +70,7 @@ function getBooksData(request, response) {
     if (error) {
       response.send("something went wrong");
     } else {
-      // console.log(userData[0].books);
+      console.log(userData[0].books);
       response.send(userData[0].books);
     }
   });
@@ -112,7 +115,26 @@ function deleteBook(req, res) {
   });
 }
 
-// listening on PORT
+function updateBook(req, res) {
+  const { bookName, description, imgUrl, state, email } = req.body;
+  const index = Number(req.params.id);
+  userModel.findOne({ email: email }, (error, newData) => {
+    if (error) {
+      res.send("something went wrong UPDATE");
+    } else {      
+      newData.books.splice(index, 1, {
+        name: bookName,
+        description: description,
+        img: imgUrl,
+        status: state,
+      });
+      newData.save();
+      res.send(newData.books);
+    }
+  });
+}
+
+// LiStening on PORT
 server.listen(PORT, () => {
   console.log(`LISTINING ON PORT ${PORT}`);
 });
